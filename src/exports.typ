@@ -5,3 +5,4 @@
 #import "magic.typ"
 #import "pdfpc.typ"
 #import "components.typ"
+#import "components.typ": *

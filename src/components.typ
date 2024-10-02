@@ -169,9 +169,9 @@
   transform: (cover: false, alpha: 10%, ..args, it) => {
     // 根据标题级别设置字号
     let fontSize = if it.element.level == 1 {
-      if cover { 0.8em } else { 1.5em } // 一级标题
+      if cover { 0.8em } else { 1.1em } // 一级标题
     } else if it.element.level == 2 {
-      if cover { 0.8em } else { 1em } // 二级标题
+      if cover { 0.7em } else { 0.8em } // 二级标题
     } else {
       0.8em // 其他级别标题
     }
@@ -377,54 +377,73 @@
 /// - `short-heading` is a boolean indicating whether the headings should be shortened. Default is `true`.
 #let mini-slides(
   self: none,
-  fill: rgb("000000"),
-  alpha: 60%,
-  display-section: false,
-  display-subsection: true,
-  short-heading: true,
+  fill: rgb("000000"),           // 填充颜色，默认为黑色
+  alpha: 60%,                    // 非当前章节的透明度
+  display-section: false,        // 是否显示章节的幻灯片链接
+  display-subsection: true,      // 是否显示子章节的幻灯片链接
+  short-heading: true,           // 是否使用简短的标题
 ) = (
   context {
+    // 查询所有一级和二级标题
     let headings = query(heading.where(level: 1).or(heading.where(level: 2)))
+    // 过滤出一级标题（章节）
     let sections = headings.filter(it => it.level == 1)
+    // 如果没有章节，直接返回
     if sections == () {
       return
     }
+    // 获取第一个章节所在的页面编号
     let first-page = sections.at(0).location().page()
+    // 过滤掉第一个章节之前的标题
     headings = headings.filter(it => it.location().page() >= first-page)
+    // 查询幻灯片元数据，过滤出有效的幻灯片
     let slides = query(<touying-metadata>).filter(it => (
       utils.is-kind(it, "touying-new-slide") and it.location().page() >= first-page
     ))
+    // 获取当前页面编号
     let current-page = here().page()
+    // 计算当前章节的索引
     let current-index = sections.filter(it => it.location().page() <= current-page).len() - 1
+    // 初始化用于存储列的数组
     let cols = ()
     let col = ()
+    // 遍历标题，构建目录结构
     for (hd, next-hd) in headings.zip(headings.slice(1) + (none,)) {
+      // 获取下一个标题的页面编号，如果没有则设为正无穷
       let next-page = if next-hd != none {
         next-hd.location().page()
       } else {
         calc.inf
       }
+      // 如果是一级标题（章节）
       if hd.level == 1 {
+        // 如果当前列不为空，将其添加到列数组中并重置
         if col != () {
           cols.push(align(left, col.sum()))
           col = ()
         }
+        // 构建章节内容
         col.push({
+          // 获取标题内容，可能是简短形式
           let body = if short-heading {
             utils.short-heading(self: self, hd)
           } else {
             hd.body
           }
+          // 创建指向该章节的链接
           [#link(hd.location(), body)<touying-link>]
           linebreak()
+          // 处理该章节下的幻灯片
           while slides.len() > 0 and slides.at(0).location().page() < next-page {
             let slide = slides.remove(0)
             if display-section {
+              // 获取下一个幻灯片的页面编号
               let next-slide-page = if slides.len() > 0 {
                 slides.at(0).location().page()
               } else {
                 calc.inf
               }
+              // 判断幻灯片是否为当前页面，并显示相应的圆形符号
               if slide.location().page() <= current-page and current-page < next-slide-page {
                 [#link(slide.location(), sym.circle.filled)<touying-link>]
               } else {
@@ -432,20 +451,25 @@
               }
             }
           }
+          // 如果需要显示章节和子章节，添加换行
           if display-section and display-subsection {
             linebreak()
           }
         })
       } else {
+        // 如果是二级标题（子章节）
         col.push({
+          // 处理该子章节下的幻灯片
           while slides.len() > 0 and slides.at(0).location().page() < next-page {
             let slide = slides.remove(0)
             if display-subsection {
+              // 获取下一个幻灯片的页面编号
               let next-slide-page = if slides.len() > 0 {
                 slides.at(0).location().page()
               } else {
                 calc.inf
               }
+              // 判断幻灯片是否为当前页面，并显示相应的圆形符号
               if slide.location().page() <= current-page and current-page < next-slide-page {
                 [#link(slide.location(), sym.circle.filled)<touying-link>]
               } else {
@@ -453,59 +477,71 @@
               }
             }
           }
+          // 如果需要显示子章节，添加换行
           if display-subsection {
             linebreak()
           }
         })
       }
     }
+    // 将最后一个列添加到列数组中
     if col != () {
       cols.push(align(left, col.sum()))
       col = ()
     }
 
     // 自适应字号计算
-    let num_sections = sections.len()
-    let max_size = .5em  // 最大字号
-    let min_size = .3em  // 最小字号
-    let size_range = max_size - min_size
-    let max_sections = 3  // 假设3个章节以内可以用最大字号
+    let num_sections = sections.len()       // 章节数量
+    let max_size = .5em                     // 最大字号
+    let min_size = .3em                     // 最小字号
+    let size_range = max_size - min_size    // 字号范围
+    let max_sections = 3                    // 章节数量小于等于3时使用最大字号
 
     // 计算非当前章节的字号
     let computed_size = if num_sections <= max_sections {
       max_size
     } else {
       let size = max_size - (num_sections - max_sections) * (size_range / (num_sections - 1))
-      // 如果计算得到的字号小于最小字号，则使用最小字号
+      // 确保字号不小于最小字号
       if size < min_size {
         min_size
       } else {
         size
       }
     }
-    let small-size = computed_size
+    let small-size = computed_size          // 非当前章节的字号
 
-    // 计算当前章节的字号，比非当前章节大一点
-    let large-size = small-size + .1em
+    // 计算当前章节的字号，比非当前章节大一些
+    let large-size = small-size + .1em      // 当前章节的字号
 
+    // 设置各章节的显示样式
     if current-index < 0 or current-index >= cols.len() {
+      // 如果当前索引无效，所有章节都使用非当前章节的样式
       cols = cols.map(body => text(fill: fill, size: small-size, body))
     } else {
+      // 遍历所有章节
       cols = cols.enumerate().map(pair => {
         let (idx, body) = pair
         if idx == current-index {
+          // 当前章节，使用较大字号和正常颜色
           text(fill: fill, size: large-size, body)
         } else {
+          // 非当前章节，使用较小字号和透明度处理的颜色
           text(fill: utils.update-alpha(fill, alpha), size: small-size, body)
         }
       })
     }
+    // 设置对齐方式为顶部对齐
     set align(top)
+    // 设置显示块的内边距
     show: block.with(inset: (top: .5em, x: 2em))
+    // 调整换行符的垂直偏移，减少行间距
     show linebreak: it => it + v(-1em)
+    // 创建网格布局，排列各章节列
     grid(columns: cols.map(_ => auto).intersperse(1fr), ..cols.intersperse([]))
   }
 )
+
 
 
 

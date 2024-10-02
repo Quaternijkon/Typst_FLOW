@@ -10,6 +10,7 @@
 
 #let _typst-builtin-repeat = repeat
 
+//页眉
 #let dewdrop-header(self) = {
   // if self.store.navigation == "sidebar" {
   //   place(
@@ -56,6 +57,7 @@
     )
 }
 
+//页脚
 #let dewdrop-footer(self) = {
   set align(bottom)
   set text(size: 0.8em)
@@ -64,8 +66,8 @@
     grid(
   rows: (1fr,1fr),
   gutter: 3pt,
-  text(fill: self.colors.neutral-darkest.lighten(40%), utils.call-or-display(self, self.store.footer), size: 1em),
-  text(fill: self.colors.neutral-darkest.lighten(40%), utils.call-or-display(self, self.store.footer-alt), size: .8em),
+  text(fill: self.colors.neutral-darkest.lighten(40%), utils.call-or-display(self, self.store.footer), size: .8em),
+  text(fill: self.colors.neutral-darkest.lighten(40%), utils.call-or-display(self, self.store.footer-alt), size: .7em),
 ),
     
     text(fill: self.colors.neutral-darkest.lighten(20%), utils.call-or-display(self, self.store.footer-right)),
@@ -95,6 +97,29 @@
 ///   If you want to customize the composer, you can pass a function to the `composer` argument. The function should receive the contents of the slide and return the content of the slide, like `#slide(composer: grid.with(columns: 2))[A][B]`.
 ///
 /// - `..bodies` is the contents of the slide. You can call the `slide` function with syntax like `#slide[A][B][C]` to create a slide.
+/// 好的，去掉注释后的内容如下：
+
+// - `config` 是幻灯片的配置。你可以使用 `config-xxx` 来设置幻灯片的配置。要进行更多的配置，你可以使用 `utils.merge-dicts` 将多个配置合并。
+
+// - `repeat` 是子幻灯片的数量。默认值为 `auto`，这意味着 touying 将自动计算子幻灯片的数量。
+
+//   当你使用 `#slide(repeat: 3, self => [ .. ])` 样式代码创建幻灯片时，`repeat` 参数是必需的。回调样式的 `uncover` 和 `only` 不能被 touying 自动检测到。
+
+// - `setting` 是幻灯片的设置。你可以使用它为幻灯片添加一些设置/显示规则。
+
+// - `composer` 是幻灯片的布局。你可以用它来设置幻灯片的布局。
+
+//   例如，`#slide(composer: (1fr, 2fr, 1fr))[A][B][C]` 将幻灯片分为三部分。第一部分和最后一部分各占幻灯片的 1/4，第二部分占幻灯片的 1/2。
+
+//   如果传递一个非函数值（如 `(1fr, 2fr, 1fr)`），它将被视为 `components.side-by-side` 函数的第一个参数。
+
+//   `components.side-by-side` 函数是 `grid` 函数的简单封装。这意味着你可以使用 `grid.cell(colspan: 2, ..)` 让单元格占据两列。
+
+//   例如，`#slide(composer: 2)[A][B][#grid.cell(colspan: 2)[Footer]]` 会让 `Footer` 单元格占据两列。
+
+//   如果你想自定义布局，可以将一个函数传递给 `composer` 参数。该函数应该接收幻灯片的内容并返回幻灯片的内容，如 `#slide(composer: grid.with(columns: 2))[A][B]`。
+
+// - `..bodies` 是幻灯片的内容。你可以使用 `#slide[A][B][C]` 这样的语法调用 `slide` 函数来创建一个幻灯片。
 #let slide(
   config: (:),
   repeat: auto,
@@ -225,14 +250,16 @@
     self,
     config-page(
       fill: self.colors.neutral-lightest,
-      footer: dewdrop-footer,
+      footer: none,
+      header: none,
+      margin: (top: 1.5em, bottom: 1.5em),
     ),
   )
   touying-slide(
     self: self,
     components.adaptive-columns(
       start: text(
-        1.2em,
+        1.5em,
         fill: self.colors.primary,
         weight: "bold",
         utils.call-or-display(self, title),
@@ -324,7 +351,7 @@
   footer-alt: none,
   footer-right: context utils.slide-counter.display() + " / " + utils.last-slide-number,
   primary: rgb("#0c4842"),
-  alpha: 37%,
+  alpha: 25%,
   subslide-preamble: self => block(
     text(1.2em, weight: "bold", fill: self.colors.primary, utils.display-current-heading(depth: self.slide-level)),
   ),

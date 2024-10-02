@@ -19,7 +19,14 @@
   ),
 )
 
-#set heading(numbering: numbly("{1}.", default: "1.1"))
+// #set heading(numbering: numbly("{1}.", default: "1.1"))
+
+#show outline.entry.where(
+  level: 1
+): it => {
+  v(1em, weak: true)
+  strong(it.body)
+}
 
 #title-slide()
 

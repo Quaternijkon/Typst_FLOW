@@ -66,11 +66,11 @@
     grid(
   rows: (1fr,1fr),
   gutter: 3pt,
-  text(fill: self.colors.neutral-darkest.lighten(40%), utils.call-or-display(self, self.store.footer), size: .8em),
-  text(fill: self.colors.neutral-darkest.lighten(40%), utils.call-or-display(self, self.store.footer-alt), size: .7em),
+  text(fill: self.colors.primary, utils.call-or-display(self, self.store.footer), size: .8em),
+  text(fill: self.colors.primary.lighten(40%), utils.call-or-display(self, self.store.footer-alt), size: .7em),
 ),
     
-    text(fill: self.colors.neutral-darkest.lighten(20%), utils.call-or-display(self, self.store.footer-right)),
+    text(fill: self.colors.primary, utils.call-or-display(self, self.store.footer-right), size: 1em),
   )
 }
 

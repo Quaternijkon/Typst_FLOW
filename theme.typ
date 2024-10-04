@@ -258,13 +258,13 @@
   touying-slide(
     self: self,
     components.adaptive-columns(
-      start: text(
-        1.5em,
+      start: align(right)[#text(
+        2em,
         fill: self.colors.primary,
         weight: "bold",
         utils.call-or-display(self, title),
         // font: "SF Pro Display",
-      ),
+      )],
       // text("123"),
       text(
         fill: self.colors.neutral-darkest,
@@ -350,7 +350,8 @@
   footer: none,
   footer-alt: none,
   footer-right: context utils.slide-counter.display() + " / " + utils.last-slide-number,
-  primary: rgb("#0c4842"),
+  primary: rgb("#004098"),
+  secondary: rgb("#543795"),
   alpha: 25%,
   subslide-preamble: self => block(
     text(1.2em, weight: "bold", fill: self.colors.primary, utils.display-current-heading(depth: self.slide-level)),

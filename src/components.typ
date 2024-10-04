@@ -176,6 +176,12 @@
       0.8em // 其他级别标题
     }
 
+    let weight = if it.element.level == 1 {
+      if cover { "regular" } else { "bold" }
+    } else {
+      "regular"
+    }
+
     text(
       fill: if cover {
         utils.update-alpha(text.fill, alpha)
@@ -183,6 +189,7 @@
         text.fill
       },
       size: fontSize,
+      weight: weight,
       it
     )
   },

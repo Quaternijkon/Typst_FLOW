@@ -21,12 +21,21 @@
 
 // #set heading(numbering: numbly("{1}.", default: "1.1"))
 
+#let primary= rgb("#004098")
+
+#show emph: it => {
+  text(primary, it.body)
+}
+
 #show outline.entry.where(
   level: 1
 ): it => {
   v(1em, weak: true)
-  strong(it.body)
+  // strong(it.body)
+  text(primary, it.body)
 }
+
+
 
 #title-slide()
 

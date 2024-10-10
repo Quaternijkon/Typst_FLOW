@@ -11,8 +11,8 @@
   footer-alt: self => self.info.subtitle,
   navigation: "mini-slides",
   config-info(
-    title: [Some Optimization Strategies in Milvus],
-    subtitle: [Heterogeneous Computing],
+    title: [A strategy to improve cache performance in vevtor search],
+    subtitle: [Cache-aware design in Milvus],
     author: [董若扬],
     date: datetime.today(),
     institution: [ADSLAB, USTC],
@@ -41,5 +41,5 @@
 
 // #outline-slide()
 
-#include "content.typ"
+#include "content1.typ"
 

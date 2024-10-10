@@ -3,12 +3,17 @@
 
 // #import "../src/exports.typ": *
 #import "src/exports.typ": *
+#import "lib.typ": *
 
 #let SFD=("SF Pro Display")
 
 #let SFT=("SF Pro Text")
 
 #let _typst-builtin-repeat = repeat
+
+#set text(
+  font:Xe,
+)
 
 //页眉
 #let dewdrop-header(self) = {
@@ -263,12 +268,12 @@
         fill: self.colors.primary,
         weight: "bold",
         utils.call-or-display(self, title),
-        // font: "SF Pro Display",
+        // font: Ar,
       )],
       // text("123"),
       text(
         fill: self.colors.neutral-darkest,
-        // font: "SF Pro Text",
+        // font: Xe,
         // font:"Times New Roman",
         components.progressive-outline(alpha: self.store.alpha, title: none, indent: 1em, depth: self.slide-level, ..args),
       ),

@@ -11,7 +11,7 @@
   footer-alt: self => self.info.subtitle,
   navigation: "mini-slides",
   config-info(
-    title: [A strategy to improve cache performance in vevtor search],
+    title: [A strategy to improve cache performance in vector query],
     subtitle: [Cache-aware design in Milvus],
     author: [董若扬],
     date: datetime.today(),

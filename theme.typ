@@ -2,7 +2,7 @@
 // The typst version was written by https://github.com/OrangeX4
 
 // #import "../src/exports.typ": *
-#import "src/exports.typ": *
+// #import "src/exports.typ": *
 #import "lib.typ": *
 
 #let SFD=("SF Pro Display")
@@ -10,10 +10,6 @@
 #let SFT=("SF Pro Text")
 
 #let _typst-builtin-repeat = repeat
-
-#set text(
-  font:Xe,
-)
 
 //页眉
 #let dewdrop-header(self) = {

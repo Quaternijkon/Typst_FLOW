@@ -13,42 +13,40 @@
 
 //页眉
 #let dewdrop-header(self) = {
-  // if self.store.navigation == "sidebar" {
-  //   place(
-  //     right + top,
-  //     {
-  //       v(4em)
-  //       show: block.with(width: self.store.sidebar.width, inset: (x: 1em))
-  //       set align(left)
-  //       set par(justify: false)
-  //       set text(size: .9em)
-  //       components.custom-progressive-outline(
-  //         self: self,
-  //         level: auto,
-  //         alpha: self.store.alpha,
-  //         text-fill: (self.colors.primary, self.colors.neutral-darkest),
-  //         text-size: (1em, .9em),
-  //         vspace: (-.2em,),
-  //         indent: (0em, self.store.sidebar.at("indent", default: .5em)),
-  //         fill: (self.store.sidebar.at("fill", default: _typst-builtin-repeat[.]),),
-  //         filled: (self.store.sidebar.at("filled", default: false),),
-  //         paged: (self.store.sidebar.at("paged", default: false),),
-  //         short-heading: self.store.sidebar.at("short-heading", default: true),
-  //       )
-  //     },
-  //   )
-  // } else if self.store.navigation == "mini-slides" {
-  //   components.mini-slides(
-  //     self: self,
-  //     fill: self.colors.primary,
-  //     alpha: self.store.alpha,
-  //     display-section: self.store.mini-slides.at("display-section", default: false),
-  //     display-subsection: self.store.mini-slides.at("display-subsection", default: true),
-  //     short-heading: self.store.mini-slides.at("short-heading", default: true),
-  //   )
-  // }
-
-  components.mini-slides(
+  if self.store.navigation == "sidebar" {
+    place(
+      right + top,
+      {
+        v(4em)
+        show: block.with(width: self.store.sidebar.width, inset: (x: 1em))
+        set align(left)
+        set par(justify: false)
+        set text(size: .9em)
+        components.custom-progressive-outline(
+          self: self,
+          level: auto,
+          alpha: self.store.alpha,
+          text-fill: (self.colors.primary, self.colors.neutral-darkest),
+          text-size: (1em, .9em),
+          vspace: (-.2em,),
+          indent: (0em, self.store.sidebar.at("indent", default: .5em)),
+          fill: (self.store.sidebar.at("fill", default: _typst-builtin-repeat[.]),),
+          filled: (self.store.sidebar.at("filled", default: false),),
+          paged: (self.store.sidebar.at("paged", default: false),),
+          short-heading: self.store.sidebar.at("short-heading", default: true),
+        )
+      },
+    )
+  } else if self.store.navigation == "mini-slides" {
+    // components.mini-slides(
+    //   self: self,
+    //   fill: self.colors.primary,
+    //   alpha: self.store.alpha,
+    //   display-section: self.store.mini-slides.at("display-section", default: false),
+    //   display-subsection: self.store.mini-slides.at("display-subsection", default: true),
+    //   short-heading: self.store.mini-slides.at("short-heading", default: true),
+    // )
+    components.mini-slides(
       self: self,
       fill: self.colors.primary,
       alpha: self.store.alpha,
@@ -56,6 +54,9 @@
       display-subsection: self.store.mini-slides.at("display-subsection", default: true),
       short-heading: self.store.mini-slides.at("short-heading", default: true),
     )
+  }
+
+  
 }
 
 //页脚
@@ -291,6 +292,55 @@
   touying-slide(self: self, align(horizon + center, body))
 })
 
+#let end-slide(outline-size:.8em,body) = touying-slide-wrapper(self =>{
+  self = utils.merge-dicts(
+    self,
+    config-common(freeze-slide-counter: true),
+    // config-page(fill: self.colors.primary, margin: 2em),
+    // config-page(
+    //   footer:  dewdrop-footer,
+    // )
+  )
+  
+  touying-slide(
+    self: self,
+    grid(
+      columns: (2fr,1fr),
+      {
+      set text(fill: self.colors.primary, size: 2em)
+      block(height: 100%, width: 100%,align(horizon+center,body))
+      },
+      place(
+      right + top,
+      {
+        // v(4em)
+        show: block.with(width: self.store.sidebar.width, inset: (x:0em))
+        set align(left)
+        set par(justify: false)
+        set text(size: outline-size)
+        components.adaptive-columns(
+          text(
+            outline(title: none, indent: .5em, depth: none, fill: none)
+          )
+        )
+
+        // components.custom-progressive-outline(
+        //   self: self,
+        //   level: auto,
+        //   alpha: self.store.alpha,
+        //   text-fill: (self.colors.primary, self.colors.neutral-darkest),
+        //   text-size: (1em, .9em),
+        //   vspace: (-.2em,),
+        //   indent: (0em, self.store.sidebar.at("indent", default: .5em)),
+        //   fill: (self.store.sidebar.at("fill", default: _typst-builtin-repeat[.]),),
+        //   filled: (self.store.sidebar.at("filled", default: false),),
+        //   paged: (self.store.sidebar.at("paged", default: false),),
+        //   short-heading: self.store.sidebar.at("short-heading", default: true),
+        // )
+      })
+    )
+  )
+})
 
 /// Touying dewdrop theme.
 ///

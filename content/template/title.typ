@@ -1,5 +1,5 @@
 #import "../../theme.typ": *
-#import "../../lib.typ"
+// #import "../../lib.typ"
 
 #show: dewdrop-theme.with(
   aspect-ratio: "16-9",
